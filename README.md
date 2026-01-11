@@ -1,59 +1,33 @@
 # MovieSearch
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.5.
+Aplicacion Angular 21 que consume Supabase para listar y buscar peliculas, con interfaz construida en PrimeNG y rutas standalone.
 
-## Development server
+## Stack
 
-To start a local development server, run:
+- Angular 21 (standalone + signals)
+- PrimeNG con tema Aura
+- Supabase (tabla `movies`)
+- Vitest via `ng test`
 
-```bash
-ng serve
-```
+## Configuracion rapida
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+1. `npm install`
+2. Copia `src/environments/environment.template.ts` a `src/environments/environment.ts` y completa `supabaseUrl` y `supabaseKey` con tus credenciales.
+3. En Supabase, crea la tabla `movies` con columnas sugeridas: `id` (int, pk), `title` (text), `overview` (text), `poster_url` (text), `release_year` (int), `genre` (text), `director` (text), `created_at` (timestamp).
+4. `npm start` y abre http://localhost:4200/.
 
-## Code scaffolding
+## Scripts disponibles
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- `npm start`: servidor de desarrollo con recarga.
+- `npm run build`: build de produccion en `dist/`.
+- `npm test`: pruebas unitarias con Vitest.
 
-```bash
-ng generate component component-name
-```
+## Funcionalidad
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+- Listado de peliculas desde Supabase.
+- Busqueda por titulo y filtros por genero y anio.
+- Tarjetas con PrimeNG, estados de carga y vacio.
 
-```bash
-ng generate --help
-```
+## Notas
 
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- Para builds de produccion se inyectan variables en `src/environments/environment.prod.ts` durante el proceso de CI/CD.
