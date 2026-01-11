@@ -1,0 +1,39 @@
+name: Build and Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+    - name: Replace environment variables
+      run: |
+        sed -i "s|__SUPABASE_URL__|${{ secrets.SUPABASE_URL }}|g" src/environments/environment.prod.ts
+        sed -i "s|__SUPABASE_KEY__|${{ secrets.SUPABASE_KEY }}|g" src/environments/environment.prod.ts
+    
+    - name: Build project
+      run: npm run build -- --configuration production
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist/movie-search/browser
+          cname: movie-search.example.com

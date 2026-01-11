@@ -1,0 +1,111 @@
+<div class="movie-search-container">
+  <!-- Header -->
+  <header class="header">
+    <h1>{{ title() }}</h1>
+    <p class="subtitle">Buscador de Películas</p>
+  </header>
+
+  <!-- Search Section -->
+  <section class="search-section">
+    <div class="search-wrapper">
+      <span class="p-input-icon-left search-input">
+        <input
+          type="text"
+          pInputText
+          [value]="searchQuery()"
+          (input)="searchQuery.set($any($event.target).value)"
+          (keyup.enter)="searchMovies()"
+          placeholder="Buscar películas..."
+        />
+      </span>
+
+      <p-select
+        [options]="genres"
+        [(ngModel)]="selectedGenre"
+        optionLabel="label"
+        optionValue="value"
+        [showClear]="true"
+        placeholder="Género"
+        class="filter-select"
+      />
+
+      <p-select
+        [options]="years"
+        [(ngModel)]="selectedYear"
+        optionLabel="label"
+        optionValue="value"
+        [showClear]="true"
+        placeholder="Año"
+        class="filter-select"
+      />
+
+      <p-button
+        label="Buscar"
+        (onClick)="searchMovies()"
+        [loading]="isLoading()"
+        severity="primary"
+      />
+      @if (searchQuery() || selectedGenre() || selectedYear()) {
+      <p-button label="Limpiar" (onClick)="clearSearch()" severity="secondary" [outlined]="true" />
+      }
+    </div>
+  </section>
+
+  <!-- Loading Indicator -->
+  @if (isLoading()) {
+  <div class="loading-container">
+    <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+    <p>Cargando películas...</p>
+  </div>
+  }
+
+  <!-- Movies Grid -->
+  @if (!isLoading() && movies().length > 0) {
+  <section class="movies-grid">
+    @for (movie of movies(); track movie.id) {
+    <p-card class="movie-card">
+      <ng-template pTemplate="header">
+        <div class="movie-poster">
+          <img [src]="movie.poster_url" [alt]="movie.title" loading="lazy" />
+        </div>
+      </ng-template>
+      <ng-template pTemplate="title">
+        <div class="movie-meta">
+          <h3 class="movie-title">{{ movie.title }}</h3>
+          | @if (movie.release_year) {
+          <span class="release-date"> {{ movie.release_year }} </span>
+          }
+        </div>
+      </ng-template>
+      <ng-template pTemplate="subtitle">
+        <div class="movie-meta">
+          @if (movie.genre) {
+          <span class="genre">
+            <i class="pi pi-tags"></i>
+            {{ movie.genre }}
+          </span>
+          }
+        </div>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <p class="movie-overview">
+          {{ movie.overview || 'Sin descripción disponible' }}
+        </p>
+      </ng-template>
+    </p-card>
+    }
+  </section>
+  }
+
+  <!-- Empty State -->
+  @if (!isLoading() && movies().length === 0) {
+  <div class="empty-state">
+    <i class="pi pi-search" style="font-size: 3rem"></i>
+    <h2>No se encontraron películas</h2>
+    <p>
+      @if (searchQuery()) { No hay resultados para "{{ searchQuery() }}" } @else { No hay películas
+      disponibles en la base de datos }
+    </p>
+  </div>
+  }
+</div>
