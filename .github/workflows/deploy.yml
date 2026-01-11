@@ -31,9 +31,9 @@ jobs:
 
       - name: Create environment file
         run: |
-          cat > src/environments/environment.ts << EOF
+          cat > src/environments/environment.prod.ts << EOF
           export const environment = {
-            production: false,
+            production: true,
             supabaseUrl: '${{ secrets.SUPABASE_URL }}',
             supabaseKey: '${{ secrets.SUPABASE_KEY }}',
           };
